@@ -10,8 +10,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Question vide' }, { status: 400 })
   }
 
-  const backendUrl = process.env.NEXT_PUBLIC_API_URL || process.env.BACKEND_URL || 'http://localhost:8000'
-  const fullUrl = `${backendUrl.replace(/\/$/, '')}/api/analyze`
+  let backendUrl = (process.env.NEXT_PUBLIC_API_URL || process.env.BACKEND_URL || 'http://localhost:8000').trim()
+  backendUrl = backendUrl.replace(/\/$/, '')
+
+  // Si l'utilisateur a déjà mis /api à la fin, on évite de le doubler
+  const path = backendUrl.endsWith('/api') ? '/analyze' : '/api/analyze'
+  const fullUrl = `${backendUrl}${path}`
 
   console.log(`[Proxy] Calling backend: ${fullUrl}`)
 
