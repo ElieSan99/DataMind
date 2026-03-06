@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from tools.cohort_tools import get_cohort_retention, get_rfm_segments, get_churn_rate
 
 load_dotenv("../.env")
-LLM_MODEL = os.getenv('LLM_MODEL')
+LLM_MODEL = os.getenv('LLM_MODEL', 'llama-3.3-70b-versatile')
 
 class CohortAgent:
     SYSTEM = """Tu es un analyste de rétention client expert sur le dataset Olist brésilien.

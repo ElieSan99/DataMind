@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from tools.sales_tools import get_revenue_trend, get_top_products, get_aov_analysis, get_top_products_trend
 
 load_dotenv("../.env")
-LLM_MODEL = os.getenv('LLM_MODEL')
+LLM_MODEL = os.getenv('LLM_MODEL', 'llama-3.3-70b-versatile')
 
 class SalesAgent:
     SYSTEM = """Tu es un analyste des ventes e-commerce expert sur le dataset Olist brésilien.

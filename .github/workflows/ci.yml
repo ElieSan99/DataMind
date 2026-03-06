@@ -29,6 +29,10 @@ jobs:
   # 2. Validation du Backend
   test-backend:
     runs-on: ubuntu-latest
+    env:
+      GROQ_API_KEY: "dummy_key"
+      LLM_MODEL: "llama-3.3-70b-versatile"
+      DATABASE_URL: "postgresql://dummy:dummy@localhost:5432/dummy"
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
@@ -49,6 +53,7 @@ jobs:
     needs: [build-frontend, test-backend]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    environment: DataMind-Secrets
     steps:
       - uses: actions/checkout@v4
 

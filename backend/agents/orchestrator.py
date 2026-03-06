@@ -12,7 +12,7 @@ from agents.cohort_agent import CohortAgent
 from agents.chart_agent import ChartAgent
 
 load_dotenv("../.env")
-LLM_MODEL = os.getenv('LLM_MODEL')
+LLM_MODEL = os.getenv('LLM_MODEL', 'llama-3.3-70b-versatile')
 
 class OrchestratorState(TypedDict):
     messages:      Annotated[Sequence[BaseMessage], lg.add_messages]

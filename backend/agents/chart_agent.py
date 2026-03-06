@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from tools.chart_tools import create_line_chart, create_bar_chart, create_heatmap
 
 load_dotenv("../.env")
-LLM_MODEL = os.getenv('LLM_MODEL')
+LLM_MODEL = os.getenv('LLM_MODEL', 'llama-3.3-70b-versatile')
 
 class ChartAgent:
     SYSTEM = """Tu es un spécialiste de la visualisation de données e-commerce.
