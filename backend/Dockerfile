@@ -23,8 +23,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copier le reste du code du backend
 COPY . .
 
-# Exposer le port (Render/Railway injectent leur propre PORT)
-EXPOSE 8000
+# Exposer le port (Cloud Run injecte la variable PORT, par défaut 8080)
+EXPOSE 8080
 
-# Commande de lancement (uvicorn)
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Commande de lancement (Utilisation de la forme shell pour l'expansion de $PORT)
+CMD uvicorn main:app --host 0.0.0.0 --port ${PORT:-8080}
