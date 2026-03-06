@@ -62,6 +62,15 @@ export default function Dashboard() {
       body: JSON.stringify({ question }),
     })
 
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: 'Erreur inconnue' }))
+      setMessages(m => {
+        const n = [...m]; n[n.length - 1] = { role: 'assistant', content: `❌ **Erreur de connexion au backend :** ${err.error || res.statusText}` }; return n
+      })
+      setLoading(false)
+      return
+    }
+
     const reader = res.body!.getReader()
     const decoder = new TextDecoder()
     let buf = ''

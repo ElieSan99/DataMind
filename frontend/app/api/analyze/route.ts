@@ -11,14 +11,20 @@ export async function POST(req: NextRequest) {
   }
 
   const backendUrl = process.env.NEXT_PUBLIC_API_URL || process.env.BACKEND_URL || 'http://localhost:8000'
-  const response = await fetch(`${backendUrl}/api/analyze`, {
+  const fullUrl = `${backendUrl.replace(/\/$/, '')}/api/analyze`
+
+  console.log(`[Proxy] Calling backend: ${fullUrl}`)
+
+  const response = await fetch(fullUrl, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   })
 
   if (!response.ok || !response.body) {
-    return NextResponse.json({ error: 'Backend error' }, { status: 500 })
+    const errorText = await response.text()
+    console.error(`[Proxy] Backend error (${response.status}): ${errorText}`)
+    return NextResponse.json({ error: `Erreur backend (${response.status})` }, { status: 500 })
   }
 
   // Retransmission directe du stream SSE
