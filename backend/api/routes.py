@@ -16,8 +16,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-orchestrator = Orchestrator()
-graph = orchestrator.get_graph()
+_orchestrator = None
+
+def get_orchestrator():
+    global _orchestrator
+    if _orchestrator is None:
+        _orchestrator = Orchestrator()
+    return _orchestrator
 
 
 class AnalyzeRequest(BaseModel):
@@ -27,16 +32,8 @@ class AnalyzeRequest(BaseModel):
 
 @app.get("/health")
 async def health():
-    from sqlalchemy import text
-    from db.connection import get_engine
-
-    n = get_engine().connect().execute(
-        text("SELECT COUNT(*) FROM orders WHERE order_status='delivered'")
-    ).scalar()
-
     return {
         "status": "ok",
-        "rows_loaded": n,
         "llm": os.getenv("LLM_MODEL", "unknown"),
     }
 
@@ -49,6 +46,7 @@ async def analyze(req: AnalyzeRequest):
         return {"error": "Question trop longue (max 1000 caractères)"}
 
     session_id = req.session_id or str(uuid.uuid4())
+    graph = get_orchestrator().get_graph()
 
     initial_state = {
         "messages": [HumanMessage(content=req.question)],
