@@ -14,7 +14,8 @@ def get_engine() -> Engine:
 
     db_url = os.getenv("DATABASE_URL")
     if not db_url:
-        raise RuntimeError("DATABASE_URL manquant dans .env")
+        print("⚠️ WARNING: DATABASE_URL is missing. Database features will be unavailable.")
+        return None # On ne crash pas, on laisse l'app démarrer
 
     _engine = create_engine(
         db_url,
@@ -26,9 +27,7 @@ def get_engine() -> Engine:
         connect_args={"sslmode": "require"},  # obligatoire Supabase
         echo=False,
     )
-    with _engine.connect() as conn:
-        conn.execute(text("SELECT 1"))
-    print(f"✓ SQLAlchemy engine → Supabase (pool={os.getenv('DB_POOL_SIZE', 5)})")
+    print(f"✓ SQLAlchemy engine created (pool={os.getenv('DB_POOL_SIZE', 5)})")
     return _engine
 
 def dispose_engine():

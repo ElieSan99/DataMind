@@ -4,6 +4,8 @@ from db.connection import get_engine, dispose_engine
 def init_data():
     """Appelé au démarrage FastAPI — crée le pool et vérifie la base."""
     engine = get_engine()
+    if engine is None:
+        return
     with engine.connect() as conn:
         row = conn.execute(text("""
             SELECT

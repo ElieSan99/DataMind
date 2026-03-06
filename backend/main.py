@@ -5,9 +5,12 @@ from data_loader import init_data, shutdown_data
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print("Connexion Supabase...")
-    init_data()
-    print("DataMind prêt.")
+    print("Initialisation DataMind...")
+    try:
+        init_data()
+        print("✓ DataMind prêt.")
+    except Exception as e:
+        print(f"⚠️ Erreur lors de l'initialisation : {e}")
     yield
     shutdown_data()
 
