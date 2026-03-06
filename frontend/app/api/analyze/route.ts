@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Question vide' }, { status: 400 })
   }
 
-  const backendUrl = process.env.BACKEND_URL || 'http://localhost:8000'
+  const backendUrl = process.env.NEXT_PUBLIC_API_URL || process.env.BACKEND_URL || 'http://localhost:8000'
   const response = await fetch(`${backendUrl}/api/analyze`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

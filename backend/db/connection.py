@@ -15,7 +15,11 @@ def get_engine() -> Engine:
     db_url = os.getenv("DATABASE_URL")
     if not db_url:
         print("⚠️ WARNING: DATABASE_URL is missing. Database features will be unavailable.")
-        return None # On ne crash pas, on laisse l'app démarrer
+        return None 
+
+    # Compatibilité SQLAlchemy 1.4+ (Supabase donne souvent postgres://)
+    if db_url.startswith("postgres://"):
+        db_url = db_url.replace("postgres://", "postgresql://", 1)
 
     _engine = create_engine(
         db_url,
