@@ -26,9 +26,27 @@ jobs:
       - name: Build check
         run: cd frontend && npm run build
 
-  # 2. Build et Déploiement du Backend sur GCP
+  # 2. Validation du Backend
+  test-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - name: Install dependencies
+        run: |
+          cd backend
+          pip install -r requirements.txt
+          pip install pytest httpx
+      - name: Run basic tests
+        run: |
+          cd backend
+          pytest test_basic.py
+
+  # 3. Build et Déploiement du Backend sur GCP
   deploy-backend:
-    needs: build-frontend
+    needs: [build-frontend, test-backend]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
