@@ -1,0 +1,14 @@
+from contextlib import asynccontextmanager
+from fastapi import FastAPI
+from api.routes import app as fastapi_app
+from data_loader import init_data, shutdown_data
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("Connexion Supabase...")
+    init_data()
+    print("DataMind prêt.")
+    yield
+    shutdown_data()
+
+fastapi_app.router.lifespan_context = lifespan
