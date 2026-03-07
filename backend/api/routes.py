@@ -61,7 +61,8 @@ async def analyze(req: AnalyzeRequest):
         final_answer = None
 
         try:
-            async for event in graph.astream_events(initial_state, version="v2"):
+            config = {"recursion_limit": 50}
+            async for event in graph.astream_events(initial_state, version="v2", config=config):
                 kind = event.get("event")
                 name = event.get("name", "")
                 data = event.get("data", {})

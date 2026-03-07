@@ -1,7 +1,7 @@
 import os
 import json
 from typing import TypedDict, Annotated, Sequence
-from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
+from langchain_core.messages import BaseMessage, HumanMessage, AIMessage, SystemMessage
 from langchain_core.tools import tool
 from langchain_groq import ChatGroq
 from langgraph.graph import StateGraph, END
@@ -83,10 +83,11 @@ FLUX DE TRAVAIL CRITIQUE :
 
 RÈGLES D'APPEL :
 - Ne génère JAMAIS de graphique toi-même, utilise call_chart_generator.
+- IMPORTANT : Une fois que tu as reçu le résultat de call_chart_generator, ne rappelle plus d'agent. Passe directement à la synthèse finale.
 - Pour call_chart_generator : data_json doit être la string JSON brute reçue de l'agent.
 - Chart types: 'line' pour les séries temporelles, 'bar' pour les classements.
 """
-            messages = [HumanMessage(content=system)] + list(state["messages"])
+            messages = [SystemMessage(content=system)] + list(state["messages"])
             response = llm_with_tools.invoke(messages)
             return {"messages": [response]}
 
